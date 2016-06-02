@@ -26,7 +26,7 @@ class TableLabelProvider implements ITableLabelProvider {
 		final TableLine entry = (TableLine) element;
 		switch (columnIndex) {
 		case 0:
-			return entry.getKey().toString();
+			return entry.getVariable().toString();
 		case 1:
 			return entry.getValue().toString();
 		}
