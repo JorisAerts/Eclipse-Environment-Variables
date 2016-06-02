@@ -1,0 +1,6 @@
+{
+  "name": "Eclipse Environment Variables",
+  "tagline": "Allows you to add environment variables to eclipse",
+  "body": "### What?\r\nI got tired of adding Environment Variables for separate sets of JUnit Tests. So I wrote an eclipse plugin which allows you to define global Environment Variables.\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
