@@ -6,8 +6,10 @@ import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -51,13 +53,19 @@ public class EnvironmentPreferencePage extends FieldEditorPreferencePage impleme
 	 */
 	@Override public void createFieldEditors() {
 
-		getShell().setLayout(new GridLayout(2, false));
-
 		table = new MapTable(getFieldEditorParent(), vars);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
 		table.refresh();
 
-		final Button addButton = new Button(getFieldEditorParent(), SWT.NONE);
+		final Canvas canvas = new Canvas(getFieldEditorParent(), SWT.NONE);
+		final GridLayout gl_canvas = new GridLayout(2, true);
+		gl_canvas.verticalSpacing = 0;
+		gl_canvas.marginHeight = 0;
+		gl_canvas.marginWidth = 0;
+		canvas.setLayout(gl_canvas);
+
+		final Button addButton = new Button(canvas, SWT.NONE);
+		addButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		addButton.setText("Add");
 		addButton.setFont(getFieldEditorParent().getFont());
 		addButton.addSelectionListener(new SelectionAdapter() {
@@ -74,7 +82,8 @@ public class EnvironmentPreferencePage extends FieldEditorPreferencePage impleme
 			}
 		});
 
-		final Button removeButton = new Button(getFieldEditorParent(), SWT.NONE);
+		final Button removeButton = new Button(canvas, SWT.NONE);
+		removeButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		removeButton.setText("Remove");
 		removeButton.setFont(getFieldEditorParent().getFont());
 		removeButton.addSelectionListener(new SelectionAdapter() {
@@ -86,7 +95,6 @@ public class EnvironmentPreferencePage extends FieldEditorPreferencePage impleme
 		final RadioGroupFieldEditor radioGroupFieldEditor = new RadioGroupFieldEditor(PreferenceConstants.P_ENV_CHOICE, "", 1,
 				new String[][] { { "&Append environment to native environment", PreferenceConstants.P_ENV_CHOICE_APPEND }, { "&Replace environment with specified environment", PreferenceConstants.P_ENV_CHOICE_REPLACE } }, getFieldEditorParent());
 		addField(radioGroupFieldEditor);
-
 	}
 
 	/* (non-Javadoc)

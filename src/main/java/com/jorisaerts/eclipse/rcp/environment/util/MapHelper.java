@@ -7,17 +7,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import org.eclipse.core.internal.preferences.Base64;
+import javax.xml.bind.DatatypeConverter;
 
-@SuppressWarnings("restriction") public class MapHelper {
+public class MapHelper {
 
 	/** Read the object from Base64 string. */
 	public static Object fromString(final String s) throws IOException, ClassNotFoundException {
 		if (null == s) {
 			return null;
 		}
-		final byte[] data = Base64.decode(s.getBytes());
-		//final byte[] data = s.getBytes();
+		final byte[] data = DatatypeConverter.parseBase64Binary(s);
 		final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
 		final Object o = ois.readObject();
 		ois.close();
@@ -27,7 +26,7 @@ import org.eclipse.core.internal.preferences.Base64;
 	public static Object fromStringSafe(final String s) {
 		try {
 			return fromString(s);
-		} catch (ClassNotFoundException | IOException e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -39,14 +38,13 @@ import org.eclipse.core.internal.preferences.Base64;
 		final ObjectOutputStream oos = new ObjectOutputStream(baos);
 		oos.writeObject(o);
 		oos.close();
-		//return new String(baos.toByteArray());
-		return new String(Base64.encode(baos.toByteArray()));
+		return new String(DatatypeConverter.printBase64Binary(baos.toByteArray()));
 	}
 
 	public static String toStringSafe(final Serializable o) {
 		try {
 			return toString(o);
-		} catch (final IOException e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 			return null;
 		}

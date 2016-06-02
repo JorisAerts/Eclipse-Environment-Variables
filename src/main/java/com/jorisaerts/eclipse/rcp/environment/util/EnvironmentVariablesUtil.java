@@ -17,7 +17,8 @@ public class EnvironmentVariablesUtil {
 	}
 
 	public static EnvVars getEnvironmentVariables(final IPreferenceStore store) {
-		return (EnvVars) MapHelper.fromStringSafe(store.getString(PreferenceConstants.P_ENV_VARS));
+		final EnvVars vars = (EnvVars) MapHelper.fromStringSafe(store.getString(PreferenceConstants.P_ENV_VARS));
+		return null == vars ? new EnvVars() : vars;
 	}
 
 	public static void setEnvironmentVariables(final IPreferenceStore store, final EnvVars vars) {
