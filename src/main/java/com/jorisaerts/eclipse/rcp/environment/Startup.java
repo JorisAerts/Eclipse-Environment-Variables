@@ -9,11 +9,13 @@ import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariablesUtil;
 public class Startup implements IStartup {
 
 	@Override public void earlyStartup() {
-		final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-
-		final boolean replace = PreferenceConstants.P_ENV_CHOICE_REPLACE.equals(store.getString(PreferenceConstants.P_ENV_CHOICE));
-		EnvironmentVariablesUtil.applyVariables(store, replace);
-
+		try {
+			final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+			final boolean replace = PreferenceConstants.P_ENV_CHOICE_REPLACE.equals(store.getString(PreferenceConstants.P_ENV_CHOICE));
+			EnvironmentVariablesUtil.applyVariables(store, replace);
+		} catch (final Exception e) {
+			e.printStackTrace(System.err);
+		}
 	}
 
 }
