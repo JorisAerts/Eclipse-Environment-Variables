@@ -1,7 +1,5 @@
 package com.jorisaerts.eclipse.rcp.environment.table;
 
-import java.util.Map;
-
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -13,23 +11,22 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-//The table to show the local secondary index info
-public class MapTable extends Composite {
+import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariables;
 
-	final Map<?, ?> map;
+//The table to show the local secondary index info
+public class EnvironmentVariablesTable extends Composite {
+
+	private EnvironmentVariables vars;
 	private final Table table;
 	private final TableViewer viewer;
-	private final TableContentProvider contentProvider;
 	private final TableLabelProvider labelProvider;
 
-	public MapTable(final Composite parent, final Map<?, ?> map) {
+	public EnvironmentVariablesTable(final Composite parent) {
 		super(parent, SWT.NONE);
 
-		this.map = map;
 		final TableColumnLayout tableColumnLayout = new TableColumnLayout();
 		setLayout(tableColumnLayout);
 
-		contentProvider = new TableContentProvider(map);
 		labelProvider = new TableLabelProvider();
 
 		viewer = new TableViewer(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
@@ -39,7 +36,11 @@ public class MapTable extends Composite {
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		viewer.setLabelProvider(labelProvider);
-		viewer.setContentProvider(contentProvider);
+		try {
+			viewer.setContentProvider(new TableContentProvider(vars));
+		} catch (final Exception e) {
+			// noop
+		}
 		createColumns(tableColumnLayout, viewer.getTable());
 
 		final CellEditor[] editors = new CellEditor[] { new TextCellEditor(table), new TextCellEditor(table) };
@@ -47,7 +48,11 @@ public class MapTable extends Composite {
 		// Assign the cell editors to the viewer
 		viewer.setCellEditors(editors);
 		viewer.setCellModifier(new TableCellModifier(viewer));
+	}
 
+	public void setVariables(final EnvironmentVariables vars) {
+		this.vars = vars;
+		viewer.setContentProvider(new TableContentProvider(vars));
 	}
 
 	public boolean removeSelected() {
@@ -58,10 +63,9 @@ public class MapTable extends Composite {
 
 		final TableItem item = table.getItem(sel);
 		final TableLine line = (TableLine) item.getData();
-		map.remove(line.getKey());
+		vars.remove(line.getEntry());
 
 		refresh();
-
 		return true;
 
 	}

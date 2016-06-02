@@ -23,7 +23,7 @@ class TableCellModifier implements ICellModifier {
 	@Override public Object getValue(final Object element, final String property) {
 		final TableLine entry = (TableLine) element;
 		if (property.equals(keyProperty)) {
-			return entry.getKey();
+			return entry.getVariable();
 		} else if (property.equals(valueProperty)) {
 			return entry.getValue();
 		}
@@ -34,9 +34,9 @@ class TableCellModifier implements ICellModifier {
 		final TableItem item = (TableItem) element;
 		final TableLine line = (TableLine) item.getData();
 		if (property.equals(keyProperty)) {
-			line.setKey(value);
+			line.setVariable((String) value);
 		} else if (property.equals(valueProperty)) {
-			line.setValue(value);
+			line.setValue((String) value);
 		}
 		tableViewer.update(new Object[] { line }, new String[] { property });
 		tableViewer.refresh(line);

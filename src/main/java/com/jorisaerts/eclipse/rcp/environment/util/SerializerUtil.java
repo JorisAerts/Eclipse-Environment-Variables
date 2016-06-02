@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 import javax.xml.bind.DatatypeConverter;
 
-public class MapHelper {
+public class SerializerUtil {
 
 	/** Read the object from Base64 string. */
 	public static Object fromString(final String s) throws IOException, ClassNotFoundException {

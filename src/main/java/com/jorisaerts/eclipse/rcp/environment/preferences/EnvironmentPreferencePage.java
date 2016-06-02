@@ -1,5 +1,14 @@
 package com.jorisaerts.eclipse.rcp.environment.preferences;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.util.Map.Entry;
+import java.util.Properties;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
@@ -10,12 +19,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.jorisaerts.eclipse.rcp.environment.Activator;
-import com.jorisaerts.eclipse.rcp.environment.table.MapTable;
-import com.jorisaerts.eclipse.rcp.environment.util.EnvVars;
+import com.jorisaerts.eclipse.rcp.environment.table.EnvironmentVariablesTable;
+import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariable;
+import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariables;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariablesUtil;
 
 /**
@@ -34,8 +46,8 @@ import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariablesUtil;
 
 public class EnvironmentPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-	private final EnvVars vars;
-	private MapTable table;
+	private final EnvironmentVariables vars;
+	private EnvironmentVariablesTable table;
 
 	public EnvironmentPreferencePage() {
 		super(GRID);
@@ -53,48 +65,62 @@ public class EnvironmentPreferencePage extends FieldEditorPreferencePage impleme
 	 */
 	@Override public void createFieldEditors() {
 
-		table = new MapTable(getFieldEditorParent(), vars);
+		table = new EnvironmentVariablesTable(getFieldEditorParent());
+		table.setVariables(vars);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
 		table.refresh();
 
 		final Canvas canvas = new Canvas(getFieldEditorParent(), SWT.NONE);
-		final GridLayout gl_canvas = new GridLayout(2, true);
+		final GridLayout gl_canvas = new GridLayout(3, true);
 		gl_canvas.verticalSpacing = 0;
 		gl_canvas.marginHeight = 0;
 		gl_canvas.marginWidth = 0;
 		canvas.setLayout(gl_canvas);
 
-		final Button addButton = new Button(canvas, SWT.NONE);
-		addButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		addButton.setText("Add");
-		addButton.setFont(getFieldEditorParent().getFont());
+		final Button addButton = createButton(canvas, "Add");
 		addButton.addSelectionListener(new SelectionAdapter() {
 			@Override public void widgetSelected(final SelectionEvent evt) {
-				String key = "Key";
-				if (vars.containsKey(key)) {
-					int i = 0;
-					while (vars.containsKey(key + " " + ++i)) {
-					}
-					key = key + " " + i;
-				}
-				vars.put(key, "New Value");
+				vars.add(new EnvironmentVariable("Variable", "value"));
 				table.refresh();
 			}
 		});
 
-		final Button removeButton = new Button(canvas, SWT.NONE);
-		removeButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		removeButton.setText("Remove");
-		removeButton.setFont(getFieldEditorParent().getFont());
+		final Button removeButton = createButton(canvas, "Remove");
 		removeButton.addSelectionListener(new SelectionAdapter() {
 			@Override public void widgetSelected(final SelectionEvent evt) {
 				table.removeSelected();
 			}
 		});
 
-		final RadioGroupFieldEditor radioGroupFieldEditor = new RadioGroupFieldEditor(PreferenceConstants.P_ENV_CHOICE, "", 1,
-				new String[][] { { "&Append environment to native environment", PreferenceConstants.P_ENV_CHOICE_APPEND }, { "&Replace environment with specified environment", PreferenceConstants.P_ENV_CHOICE_REPLACE } }, getFieldEditorParent());
-		addField(radioGroupFieldEditor);
+		final Button importButton = createButton(canvas, "Import...");
+		importButton.addSelectionListener(new SelectionAdapter() {
+			@Override public void widgetSelected(final SelectionEvent evt) {
+				final FileDialog dialog = new FileDialog(getShell());
+				final File file = new File(dialog.open());
+				System.out.println("Selected: " + file.getAbsolutePath());
+				final Properties props = new Properties();
+				try (Reader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);) {
+					props.load(reader);
+				} catch (final IOException e) {
+					e.printStackTrace();
+				}
+				for (final Entry<Object, Object> entry : props.entrySet()) {
+					vars.add(new EnvironmentVariable(entry.getKey().toString(), entry.getValue().toString()));
+				}
+				table.refresh();
+			}
+		});
+
+		// dummy field...
+		addField(new RadioGroupFieldEditor("id", "", 1, new String[][] {}, getFieldEditorParent(), false));
+	}
+
+	private Button createButton(final Composite parent, final String text) {
+		final Button button = new Button(parent, SWT.NONE);
+		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		button.setText(text);
+		button.setFont(getFieldEditorParent().getFont());
+		return button;
 	}
 
 	/* (non-Javadoc)
@@ -110,8 +136,7 @@ public class EnvironmentPreferencePage extends FieldEditorPreferencePage impleme
 	@Override protected void performDefaults() {
 		super.performDefaults();
 		vars.clear();
-		vars.putAll(EnvironmentVariablesUtil.getEnvironmentVariables(getPreferenceStore()));
-		EnvironmentVariablesUtil.applyVariables(getPreferenceStore(), true);
+		EnvironmentVariablesUtil.reset(getPreferenceStore());
 		if (null != table) {
 			table.refresh();
 		}
