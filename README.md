@@ -1,5 +1,5 @@
 # Eclipse-Environment-Variables
-Allows you to add environment variables to eclipse
+Allows you to define global environment variables to eclipse. You can use these variables, for example, instead of the Variables tab on JUnit Configurations.
 
 Download the jar from the [latest release](https://github.com/JorisAerts/Eclipse-Environment-Variables/releases/latest) and drop it in eclipse's "dropins" folder. Restart eclipse. 
 
