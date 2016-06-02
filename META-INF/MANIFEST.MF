@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Environment Variables
+Bundle-SymbolicName: EnvironmentVariables;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-Activator: com.jorisaerts.eclipse.rcp.environment.Activator
+Bundle-Vendor: Joris Aerts
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ lib/jna.jar
