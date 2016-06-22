@@ -1,7 +1,7 @@
 # Eclipse Environment Variables
 Allows you to define global environment variables to eclipse. You can use these variables, for example, instead of the Variables tab on JUnit Configurations.
 
-_Tested on Eclipse 4.4, 4.5 and 4.6RC3_
+_Tested on Eclipse 4.4, 4.5 and 4.6_
 
 
 ### Installation
