@@ -1,13 +1,15 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Environment Variables
-Bundle-SymbolicName: EnvironmentVariables;singleton:=true
-Bundle-Version: 0.0.1.qualifier
-Bundle-Activator: com.jorisaerts.eclipse.rcp.environment.Activator
+Bundle-Name: Eclipse Environment Variables
+Bundle-SymbolicName: Eclipse-Environment-Variables;singleton:=true
+Bundle-Version: 0.0.2
 Bundle-Vendor: Joris Aerts
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: javax.xml.bind
+Automatic-Module-Name: Eclipse-Environment-Variables
+Bundle-Activator: com.jorisaerts.eclipse.rcp.environment.Activator
+Require-Bundle: org.eclipse.ui, org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
- lib/jna.jar
+ lib/javax.xml.bind_2.2.0.v201105210648.jar,
+ lib/jna-5.2.0.jar

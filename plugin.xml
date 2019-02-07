@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension
-         point="org.eclipse.ui.startup">
-      <startup
-            class="com.jorisaerts.eclipse.rcp.environment.Startup">
+   
+   <extension point="org.eclipse.ui.startup">
+      <startup class="com.jorisaerts.eclipse.rcp.environment.Startup">
       </startup>
    </extension>
 
-   <extension
-         point="org.eclipse.ui.preferencePages">
+   <extension point="org.eclipse.ui.preferencePages">
       <page
             category="org.eclipse.ui.preferencePages.Workbench"
             class="com.jorisaerts.eclipse.rcp.environment.preferences.EnvironmentPreferencePage"
@@ -17,10 +15,8 @@
             name="Environment Variables">
       </page>
    </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="com.jorisaerts.eclipse.rcp.environment.preferences.PreferenceInitializer">
+   <extension point="org.eclipse.core.runtime.preferences">
+      <initializer class="com.jorisaerts.eclipse.rcp.environment.preferences.PreferenceInitializer">
       </initializer>
    </extension>
 
