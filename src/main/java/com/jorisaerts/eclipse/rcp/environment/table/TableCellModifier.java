@@ -16,11 +16,13 @@ class TableCellModifier implements ICellModifier {
 		valueProperty = (String) tableViewer.getColumnProperties()[1];
 	}
 
-	@Override public boolean canModify(final Object element, final String property) {
+	@Override
+	public boolean canModify(final Object element, final String property) {
 		return true;
 	}
 
-	@Override public Object getValue(final Object element, final String property) {
+	@Override
+	public Object getValue(final Object element, final String property) {
 		final TableLine entry = (TableLine) element;
 		if (property.equals(keyProperty)) {
 			return entry.getVariable();
@@ -30,7 +32,8 @@ class TableCellModifier implements ICellModifier {
 		return element.toString();
 	}
 
-	@Override public void modify(final Object element, final String property, final Object value) {
+	@Override
+	public void modify(final Object element, final String property, final Object value) {
 		final TableItem item = (TableItem) element;
 		final TableLine line = (TableLine) item.getData();
 		if (property.equals(keyProperty)) {

@@ -10,14 +10,14 @@ public class EnvironmentVariablesUtil {
 	public static void applyVariables(final IPreferenceStore store, final boolean replace) {
 		final EnvironmentVariables vars = getEnvironmentVariables(store);
 		for (final EnvironmentVariable entry : vars) {
-			Environment.setenv(entry.getVariable(), entry.getValue(), replace);
+			Environment.setenv(entry.getName(), entry.getValue(), replace);
 		}
 	}
 
 	public static void clearOldVariables(final IPreferenceStore store) {
 		final EnvironmentVariables oldVars = getEnvironmentVariables(store);
 		for (final EnvironmentVariable entry : oldVars) {
-			Environment.unsetenv(entry.getVariable());
+			Environment.unsetenv(entry.getName());
 		}
 	}
 
@@ -27,7 +27,8 @@ public class EnvironmentVariablesUtil {
 	}
 
 	public static EnvironmentVariables getEnvironmentVariables(final IPreferenceStore store) {
-		final EnvironmentVariables vars = (EnvironmentVariables) SerializerUtil.fromStringSafe(store.getString(PreferenceConstants.P_ENV_VARS));
+		final EnvironmentVariables vars = (EnvironmentVariables) SerializerUtil
+				.fromStringSafe(store.getString(PreferenceConstants.P_ENV_VARS));
 		return null == vars ? new EnvironmentVariables() : vars;
 	}
 

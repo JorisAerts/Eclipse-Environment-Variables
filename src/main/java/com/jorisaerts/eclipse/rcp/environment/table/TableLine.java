@@ -27,13 +27,13 @@ class TableLine {
 	}
 
 	public final String getVariable() {
-		return entry.getVariable();
+		return entry.getName();
 	}
 
 	public final void setVariable(final String key) {
-		final String oldValue = entry.getVariable();
-		entry.setVariable(key);
-		propertyChangeSupport.firePropertyChange("key", oldValue, entry.getVariable());
+		final String oldValue = entry.getName();
+		entry.setName(key);
+		propertyChangeSupport.firePropertyChange("key", oldValue, entry.getName());
 	}
 
 	public final String getValue() {
@@ -46,7 +46,8 @@ class TableLine {
 		propertyChangeSupport.firePropertyChange("value", oldValue, entry.getValue());
 	}
 
-	@Override public String toString() {
+	@Override
+	public String toString() {
 		return "TableLine[" + getVariable() + "=" + getValue() + "]";
 	}
 

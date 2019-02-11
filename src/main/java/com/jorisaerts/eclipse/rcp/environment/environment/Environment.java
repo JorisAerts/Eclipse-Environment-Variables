@@ -71,7 +71,8 @@ public class Environment {
 		return libc.setenv(name, value, overwrite ? 1 : 0);
 	}
 
-	@SuppressWarnings("unchecked") public static Map<String, String> getwinenv() {
+	@SuppressWarnings("unchecked")
+	public static Map<String, String> getwinenv() {
 		try {
 			final Class<?> sc = Class.forName("java.lang.ProcessEnvironment");
 			final Field caseinsensitive = sc.getDeclaredField("theCaseInsensitiveEnvironment");
@@ -82,7 +83,8 @@ public class Environment {
 		return new HashMap<String, String>();
 	}
 
-	@SuppressWarnings("unchecked") public static Map<String, String> getenv() {
+	@SuppressWarnings("unchecked")
+	public static Map<String, String> getenv() {
 		try {
 			final Map<String, String> theUnmodifiableEnvironment = System.getenv();
 			final Class<?> cu = theUnmodifiableEnvironment.getClass();

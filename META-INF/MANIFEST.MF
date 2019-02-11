@@ -8,7 +8,10 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: javax.xml.bind
 Automatic-Module-Name: Eclipse-Environment-Variables
 Bundle-Activator: com.jorisaerts.eclipse.rcp.environment.Activator
-Require-Bundle: org.eclipse.ui, org.eclipse.core.runtime
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.debug.core;bundle-version="3.13.100",
+ org.eclipse.debug.ui;bundle-version="3.13.200"
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/javax.xml.bind_2.2.0.v201105210648.jar,

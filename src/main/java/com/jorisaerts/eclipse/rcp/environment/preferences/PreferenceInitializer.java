@@ -15,9 +15,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
+	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#
+	 * initializeDefaultPreferences()
 	 */
-	@Override public void initializeDefaultPreferences() {
+	@Override
+	public void initializeDefaultPreferences() {
 		final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		store.setDefault(PreferenceConstants.P_ENV_CHOICE, PreferenceConstants.P_ENV_CHOICE_APPEND);
 		store.setDefault(PreferenceConstants.P_ENV_VARS, SerializerUtil.toStringSafe(new EnvironmentVariables()));
