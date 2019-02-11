@@ -23,11 +23,15 @@ public class Environment {
 	static public class POSIX {
 		static Object libc;
 		static {
-			final String os = System.getProperty("os.name");
-			if ("Linux".equals(os) || "Mac OS X".equals(os)) {
+			final String os = System.getProperty("os.name").toLowerCase();
+			if (os.indexOf("win") >= 0) {
+				libc = Native.loadLibrary("msvcrt", WinLibC.class);
+			} else if (os.indexOf("mac") >= 0) {
+				libc = Native.loadLibrary("c", LinuxLibC.class);
+			} else if (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0) {
 				libc = Native.loadLibrary("c", LinuxLibC.class);
 			} else {
-				libc = Native.loadLibrary("msvcrt", WinLibC.class);
+				throw new RuntimeException("Unsupported OS.");
 			}
 		}
 
