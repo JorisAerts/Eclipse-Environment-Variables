@@ -19,6 +19,7 @@ public class Environment {
 		public int unsetenv(String name);
 	}
 
+	@SuppressWarnings("deprecation")
 	static public class POSIX {
 		static Object libc;
 		static {

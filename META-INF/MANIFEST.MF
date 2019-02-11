@@ -10,8 +10,8 @@ Automatic-Module-Name: Eclipse-Environment-Variables
 Bundle-Activator: com.jorisaerts.eclipse.rcp.environment.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.debug.core;bundle-version="3.13.100",
- org.eclipse.debug.ui;bundle-version="3.13.200"
+ org.eclipse.debug.core,
+ org.eclipse.debug.ui
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/javax.xml.bind_2.2.0.v201105210648.jar,
