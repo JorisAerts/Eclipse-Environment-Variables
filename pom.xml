@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.jorisaerts.eclipse.rcp.environment</groupId>
+  <artifactId>eclipse-environment-variables</artifactId>
+  <version>0.0.2</version>
+  <name>Eclipse Environment Variables Preference Page</name>
+  <packaging>pom</packaging>
+  <description>A preferences page to configure global environment variables in eclipse	</description>
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+    	<artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <!-- <verbose>true</verbose> -->
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <url>https://github.com/JorisAerts/Eclipse-Environment-Variables</url>
+  <issueManagement>
+  	<url>https://github.com/JorisAerts/Eclipse-Environment-Variables/issues</url>
+  	<system>GitHub Issues</system>
+  </issueManagement>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+</properties>
+</project>
