@@ -27,7 +27,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import com.jorisaerts.eclipse.rcp.environment.Activator;
 import com.jorisaerts.eclipse.rcp.environment.table.EnvironmentVariablesTable;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariable;
-import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariables;
+import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariableCollection;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariablesUtil;
 
 /**
@@ -43,7 +43,7 @@ import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariablesUtil;
 
 public class EnvironmentPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-	private final EnvironmentVariables vars;
+	private final EnvironmentVariableCollection vars;
 	private EnvironmentVariablesTable table;
 
 	public EnvironmentPreferencePage() {

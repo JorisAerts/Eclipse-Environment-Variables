@@ -4,15 +4,15 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariable;
-import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariables;
+import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariableCollection;
 
 class TableContentProvider extends ArrayContentProvider {
 
-	private final EnvironmentVariables map;
+	private final EnvironmentVariableCollection map;
 	// private final KeyChangeListener keyChangeListener;
 	// private final ValueChangeListener valueChangeListener;
 
-	public TableContentProvider(final EnvironmentVariables map) {
+	public TableContentProvider(final EnvironmentVariableCollection map) {
 		this.map = map;
 	}
 

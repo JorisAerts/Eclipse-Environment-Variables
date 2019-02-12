@@ -11,12 +11,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariables;
+import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariableCollection;
 
 //The table to show the local secondary index info
 public class EnvironmentVariablesTable extends Composite {
 
-	private EnvironmentVariables vars;
+	private EnvironmentVariableCollection vars;
 	private final Table table;
 	private final TableViewer viewer;
 	private final TableLabelProvider labelProvider;
@@ -50,7 +50,7 @@ public class EnvironmentVariablesTable extends Composite {
 		viewer.setCellModifier(new TableCellModifier(viewer));
 	}
 
-	public void setVariables(final EnvironmentVariables vars) {
+	public void setVariables(final EnvironmentVariableCollection vars) {
 		this.vars = vars;
 		viewer.setContentProvider(new TableContentProvider(vars));
 	}
