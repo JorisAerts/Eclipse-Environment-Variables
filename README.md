@@ -1,4 +1,4 @@
-![Maven Package](https://github.com/JorisAerts/Eclipse-Environment-Variables/workflows/Maven%20Package/badge.svg)
+![Maven](https://github.com/JorisAerts/Eclipse-Environment-Variables/workflows/Maven%20Package/badge.svg) ![CI](https://github.com/JorisAerts/Eclipse-Environment-Variables/workflows/Java%20CI%20with%20Maven/badge.svg?branch=master)
 
 # Eclipse Environment Variables
 Allows you to define global environment variables to eclipse. You can use these variables, for example, instead of the Variables tab on JUnit Configurations.
@@ -7,7 +7,7 @@ _Tested on Eclipse 4.4 to 4.10_
 
 
 ### Installation
-Download the jar from the [latest release](https://github.com/JorisAerts/Eclipse-Environment-Variables/releases/latest) and drop it in eclipse's "dropins" folder. Restart eclipse. 
+Download the jar from the [latest release](https://github.com/JorisAerts/Eclipse-Environment-Variables/releases/latest) and drop it in eclipse's "dropins" folder. Restart eclipse.
 
 You'll now see an _Environment Variables_ page in the _General_ section of eclipse's Preferences.
 
