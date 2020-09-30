@@ -1,3 +1,5 @@
+![Maven Package](https://github.com/JorisAerts/Eclipse-Environment-Variables/workflows/Maven%20Package/badge.svg)
+
 # Eclipse Environment Variables
 Allows you to define global environment variables to eclipse. You can use these variables, for example, instead of the Variables tab on JUnit Configurations.
 
