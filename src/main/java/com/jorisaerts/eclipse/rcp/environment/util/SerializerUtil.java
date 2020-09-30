@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
-import javax.xml.bind.DatatypeConverter;
+import java.nio.charset.Charset;
+import java.util.Base64;
 
 public class SerializerUtil {
 
@@ -16,7 +16,7 @@ public class SerializerUtil {
 		if (null == s) {
 			return null;
 		}
-		final byte[] data = DatatypeConverter.parseBase64Binary(s);
+		final byte[] data = Base64.getDecoder().decode(s.getBytes(Charset.forName("UTF-8")));
 		final ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
 		final Object o = ois.readObject();
 		ois.close();
@@ -38,7 +38,7 @@ public class SerializerUtil {
 		final ObjectOutputStream oos = new ObjectOutputStream(baos);
 		oos.writeObject(o);
 		oos.close();
-		return new String(DatatypeConverter.printBase64Binary(baos.toByteArray()));
+		return new String(Base64.getEncoder().encode(baos.toByteArray()), Charset.forName("UTF-8"));
 	}
 
 	public static String toStringSafe(final Serializable o) {
