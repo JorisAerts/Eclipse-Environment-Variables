@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eclipse Environment Variables
 Bundle-SymbolicName: Eclipse-Environment-Variables;singleton:=true
-Bundle-Version: 0.0.3
+Bundle-Version: 0.0.4
 Bundle-Vendor: Joris Aerts
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: Eclipse-Environment-Variables
@@ -12,4 +12,3 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/jna-5.2.0.jar
-
