@@ -34,6 +34,13 @@
 		<url>https://github.com/JorisAerts/Eclipse-Environment-Variables/issues</url>
 		<system>GitHub Issues</system>
 	</issueManagement>
+	<distributionManagement>
+	   <repository>
+	     <id>github</id>
+	     <name>GitHub JorisAerts Apache Maven Packages</name>
+	     <url>https://maven.pkg.github.com/JorisAerts/Eclipse-Environment-Variables</url>
+	   </repository>
+	</distributionManagement>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
