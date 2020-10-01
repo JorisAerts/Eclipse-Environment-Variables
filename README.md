@@ -1,6 +1,6 @@
 # Eclipse Environment Variables
 
-![maven-ci](https://github.com/JorisAerts/Eclipse-Environment-Variables/workflows/maven-ci/badge.svg)  ![maven-publish](https://github.com/JorisAerts/Eclipse-Environment-Variables/workflows/maven-publish/badge.svg)
+![maven-ci](https://github.com/JorisAerts/Eclipse-Environment-Variables/workflows/maven-ci/badge.svg)
 
 Allows you to define global environment variables to eclipse. You can use these variables, for example, instead of the Variables tab on JUnit Configurations.
 
