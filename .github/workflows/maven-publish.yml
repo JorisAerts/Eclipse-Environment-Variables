@@ -13,21 +13,21 @@ jobs:
 
     steps:
 
-      - uses: JorisAerts/checkout@v2
+      - uses: actions/checkout@v2
 
       - name: Set up JDK 1.8
-        uses: JorisAerts/setup-java@v1
+        uses: actions/setup-java@v1
         with:
           java-version: 1.8
           server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
           settings-path: ${{ github.workspace }} # location for the settings.xml file
 
-      #- name: Cache Maven packages
-      #  uses: actions/cache@v2
-      #  with:
-      #    path: ~/.m2
-      #    key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-      #    restore-keys: ${{ runner.os }}-m2
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
