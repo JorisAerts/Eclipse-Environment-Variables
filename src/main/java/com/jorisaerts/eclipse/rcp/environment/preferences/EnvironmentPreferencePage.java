@@ -25,10 +25,12 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.jorisaerts.eclipse.rcp.environment.Activator;
+import com.jorisaerts.eclipse.rcp.environment.preferences.internal.Messages;
 import com.jorisaerts.eclipse.rcp.environment.table.EnvironmentVariablesTable;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariable;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariableCollection;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariablesUtil;
+import com.jorisaerts.eclipse.rcp.environment.util.SWTUtils;
 
 /**
  * This class represents a preference page that is contributed to the
@@ -49,7 +51,7 @@ public class EnvironmentPreferencePage extends FieldEditorPreferencePage impleme
 	public EnvironmentPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Environment variables to set:");
+		setDescription(Messages.EnvironmentTab_Environment_variables_to_set__3);
 		vars = EnvironmentVariablesUtil.getEnvironmentVariables(getPreferenceStore());
 	}
 
@@ -61,12 +63,14 @@ public class EnvironmentPreferencePage extends FieldEditorPreferencePage impleme
 	@Override
 	public void createFieldEditors() {
 
-		table = new EnvironmentVariablesTable(getFieldEditorParent());
+		final Composite mainComposite = SWTUtils.createComposite(getFieldEditorParent(), 2, 1, GridData.FILL_BOTH);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(mainComposite);
+
+		table = new EnvironmentVariablesTable(mainComposite);
 		table.setVariables(vars);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
 		table.refresh();
 
-		final Canvas canvas = new Canvas(getFieldEditorParent(), SWT.NONE);
+		final Canvas canvas = new Canvas(mainComposite, SWT.NONE);
 		final GridLayout gl_canvas = new GridLayout(3, true);
 		gl_canvas.verticalSpacing = 0;
 		gl_canvas.marginHeight = 0;
@@ -111,7 +115,7 @@ public class EnvironmentPreferencePage extends FieldEditorPreferencePage impleme
 		});
 
 		// dummy field...
-		addField(new RadioGroupFieldEditor("id", "", 1, new String[][] {}, getFieldEditorParent(), false));
+		addField(new RadioGroupFieldEditor("id", "", 1, new String[][] {}, mainComposite, false));
 	}
 
 	private Button createButton(final Composite parent, final String text) {
