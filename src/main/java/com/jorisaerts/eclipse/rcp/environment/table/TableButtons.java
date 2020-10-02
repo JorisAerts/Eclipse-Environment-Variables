@@ -110,18 +110,17 @@ public class TableButtons extends Composite {
 
 		if (name != null && value != null && name.length() > 0 && value.length() > 0) {
 			// Trim the environment variable name but *NOT* the value
-			addVariable(new TableLine(new EnvironmentVariable(name.trim(), value)));
+			addVariable(new EnvironmentVariable(name.trim(), value));
 			//updateAppendReplace();
 		}
 	}
 
-	protected boolean addVariable(final TableLine variable) {
-		final String name = variable.getVariable();
+	protected boolean addVariable(final EnvironmentVariable variable) {
+		final String name = variable.getName();
 		final TableItem[] items = table.getTable().getItems();
 		for (final TableItem item : items) {
-			final TableLine existingVariable = (TableLine) item.getData();
-			if (existingVariable.getVariable().equals(name)) {
-
+			final EnvironmentVariable existingVariable = (EnvironmentVariable) item.getData();
+			if (existingVariable.getName().equals(name)) {
 				final boolean overWrite = MessageDialog.openQuestion(getShell(), Messages.EnvironmentTab_12, MessageFormat.format(Messages.EnvironmentTab_13, new Object[] { name })); //
 				if (!overWrite) {
 					return false;

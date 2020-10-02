@@ -84,7 +84,7 @@ public class EnvironmentVariablesTable extends Composite {
 
 		// Setup environment variable name column
 		final TableViewerColumn tcv1 = new TableViewerColumn(viewer, SWT.NONE, 0);
-		tcv1.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> ((TableLine) element).getVariable()));
+		tcv1.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> ((EnvironmentVariable) element).getName()));
 
 		final TableColumn tc1 = tcv1.getColumn();
 		tc1.setText(Messages.EnvironmentTab_Variable_1);
@@ -104,7 +104,7 @@ public class EnvironmentVariablesTable extends Composite {
 
 		// Setup environment variable value column
 		final TableViewerColumn tcv2 = new TableViewerColumn(viewer, SWT.NONE, 1);
-		tcv2.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> ((TableLine) element).getValue()));
+		tcv2.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> ((EnvironmentVariable) element).getValue()));
 
 		final TableColumn tc2 = tcv2.getColumn();
 		tc2.setText(Messages.EnvironmentTab_Value_2);
@@ -142,8 +142,8 @@ public class EnvironmentVariablesTable extends Composite {
 		}
 
 		final TableItem item = table.getItem(sel);
-		final TableLine line = (TableLine) item.getData();
-		vars.remove(line.getEntry());
+		final EnvironmentVariable variable = (EnvironmentVariable) item.getData();
+		vars.remove(variable);
 
 		refresh();
 		return true;
