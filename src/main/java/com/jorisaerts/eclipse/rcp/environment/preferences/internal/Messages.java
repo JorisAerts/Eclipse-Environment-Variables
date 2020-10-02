@@ -38,4 +38,7 @@ public class Messages {
 	public static final String MultipleInputDialog_6 = "&Browse...";
 	public static final String MultipleInputDialog_7 = "Select a file:";
 	public static final String MultipleInputDialog_8 = "Varia&bles...";
+
+	public static final String AbstractDebugCheckboxSelectionDialog_0 = "&Select All";
+	public static final String AbstractDebugCheckboxSelectionDialog_1 = "&Deselect All";
 }
