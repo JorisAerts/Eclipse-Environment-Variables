@@ -35,4 +35,7 @@ public class Messages {
 
 	public static final String EnvironmentTab_22 = "New Environment Variable";
 
+	public static final String MultipleInputDialog_6 = "&Browse...";
+	public static final String MultipleInputDialog_7 = "Select a file:";
+	public static final String MultipleInputDialog_8 = "Varia&bles...";
 }

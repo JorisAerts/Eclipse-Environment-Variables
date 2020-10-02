@@ -1,6 +1,5 @@
 package com.jorisaerts.eclipse.rcp.environment.table;
 
-import org.eclipse.debug.internal.ui.TextGetSetEditingSupport;
 import org.eclipse.jface.layout.PixelConverter;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.CellEditor;
@@ -21,6 +20,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+import com.jorisaerts.eclipse.rcp.environment.eclipse.debug.internal.TextGetSetEditingSupport;
 import com.jorisaerts.eclipse.rcp.environment.preferences.internal.Messages;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariable;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariableCollection;
@@ -75,7 +75,10 @@ public class EnvironmentVariablesTable extends Composite {
 
 		};
 
-		final int feature = ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR | ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditor.TABBING_CYCLE_IN_VIEWER;
+		final int feature = ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR
+				| ColumnViewerEditor.TABBING_HORIZONTAL
+				| ColumnViewerEditor.KEYBOARD_ACTIVATION
+				| ColumnViewerEditor.TABBING_CYCLE_IN_VIEWER;
 
 		TableViewerEditor.create(viewer, actSupport, feature);
 
@@ -129,6 +132,7 @@ public class EnvironmentVariablesTable extends Composite {
 	public void setVariables(final EnvironmentVariableCollection vars) {
 		this.vars = vars;
 		viewer.setContentProvider(new TableContentProvider(vars));
+		refresh();
 	}
 
 	public boolean removeSelected() {
@@ -143,7 +147,14 @@ public class EnvironmentVariablesTable extends Composite {
 
 		refresh();
 		return true;
+	}
 
+	public Table getTable() {
+		return table;
+	}
+
+	public TableViewer getTableViewer() {
+		return viewer;
 	}
 
 	// Enforce call getElement method in contentProvider
