@@ -1,10 +1,11 @@
 package com.jorisaerts.eclipse.rcp.environment.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
@@ -46,37 +47,20 @@ public class EnvironmentPreferencePage extends PreferencePage implements IWorkbe
 	 */
 	@Override
 	public Control createContents(final Composite parent) {
+		final Font font = parent.getFont();
 
 		final SashForm advancedComposite = new SashForm(parent, SWT.VERTICAL);
+		advancedComposite.setFont(font);
+
 		final GridData sashData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		advancedComposite.setLayoutData(sashData);
 
-		final Composite mainColumn = new Composite(advancedComposite, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		layout.marginWidth = 0;
-		layout.marginHeight = 0;
-		mainColumn.setFont(parent.getFont());
-		mainColumn.setLayout(layout);
-
-		table = new EnvironmentVariablesTable(mainColumn);
+		table = new EnvironmentVariablesTable(advancedComposite);
 		table.setVariables(vars);
 
-		GridData data = new GridData(GridData.BEGINNING);
-		data.horizontalSpan = 2;
+		new TableButtons(table, vars, table);
 
-		// --- buttons
-		final Composite controlColumn = new Composite(mainColumn, SWT.NONE);
-		data = new GridData(GridData.FILL_VERTICAL);
-		controlColumn.setLayoutData(data);
-		layout = new GridLayout();
-		layout.marginHeight = 0;
-		layout.marginWidth = 0;
-		controlColumn.setLayout(layout);
-
-		new TableButtons(controlColumn, vars, table);
-
-		advancedComposite.setWeights(new int[] { 75, 25 });
+		//		advancedComposite.setWeights(new int[] { 75, 25 });
 		return advancedComposite;
 	}
 
@@ -97,11 +81,10 @@ public class EnvironmentPreferencePage extends PreferencePage implements IWorkbe
 	@Override
 	protected void performDefaults() {
 		super.performDefaults();
-		vars.clear();
-		EnvironmentVariablesUtil.reset(getPreferenceStore());
-		if (null != table) {
-			table.refresh();
-		}
+		final TableViewer viewer = table.getTableViewer();
+		viewer.getControl().setRedraw(false);
+		viewer.setItemCount(0);
+		viewer.getControl().setRedraw(true);
 	}
 
 	@Override
