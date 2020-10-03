@@ -2,12 +2,12 @@ package com.jorisaerts.eclipse.rcp.environment.eclipse.debug.internal;
 
 import java.util.List;
 
-import org.eclipse.debug.internal.ui.DefaultLabelProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -81,7 +81,26 @@ public abstract class AbstractDebugSelectionDialog extends SelectionDialog {
 	 * @return the label provider used in the viewer
 	 */
 	protected IBaseLabelProvider getLabelProvider() {
-		return new DefaultLabelProvider();
+		//return new DefaultLabelProvider();
+		return new IBaseLabelProvider() {
+
+			@Override
+			public void addListener(final ILabelProviderListener listener) {
+			}
+
+			@Override
+			public void dispose() {
+			}
+
+			@Override
+			public boolean isLabelProperty(final Object element, final String property) {
+				return false;
+			}
+
+			@Override
+			public void removeListener(final ILabelProviderListener listener) {
+			}
+		};
 	}
 
 	/**
