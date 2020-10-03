@@ -64,6 +64,16 @@ public class SWTUtils {
 		return l;
 	}
 
+	public static Label createWrapLabel(final Composite parent, final String text, final int hspan) {
+		final Label l = new Label(parent, SWT.NONE | SWT.WRAP);
+		l.setFont(parent.getFont());
+		l.setText(text);
+		final GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = hspan;
+		l.setLayoutData(gd);
+		return l;
+	}
+
 	public static Button createPushButton(final Composite parent, final String label, final Image image) {
 		final Button button = new Button(parent, SWT.PUSH);
 		button.setFont(parent.getFont());

@@ -1,5 +1,6 @@
 package com.jorisaerts.eclipse.rcp.environment.table;
 
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -25,6 +26,9 @@ public class TableButtons extends Composite {
 	public TableButtons(final Composite parent, final EnvironmentVariableCollection vars, final EnvironmentVariablesTable table) {
 		super(parent, SWT.NONE);
 
+		setBackground(parent.getParent().getBackground());
+		setBackgroundImage(parent.getParent().getBackgroundImage());
+
 		final Font font = parent.getFont();
 		setFont(font);
 
@@ -48,7 +52,7 @@ public class TableButtons extends Composite {
 		envSelectButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent event) {
-				//				handleEnvSelectButtonSelected();
+				table.handleEnvSelectButtonSelected();
 			}
 		});
 		envEditButton = SWTUtils.createPushButton(this, Messages.EnvironmentTab_Edit_5, null);
@@ -83,6 +87,13 @@ public class TableButtons extends Composite {
 			}
 		});
 		envPasteButton.setEnabled(true);
+
+		table.getTableViewer().addSelectionChangedListener((final SelectionChangedEvent event) -> {
+			final int size = event.getStructuredSelection().size();
+			envEditButton.setEnabled(size == 1);
+			envRemoveButton.setEnabled(size > 0);
+			envCopyButton.setEnabled(size > 0);
+		});
 
 	}
 

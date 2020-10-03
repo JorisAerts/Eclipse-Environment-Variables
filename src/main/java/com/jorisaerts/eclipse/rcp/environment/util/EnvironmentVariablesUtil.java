@@ -1,5 +1,10 @@
 package com.jorisaerts.eclipse.rcp.environment.util;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import com.jorisaerts.eclipse.rcp.environment.environment.EnvironmentVariables;
@@ -36,6 +41,20 @@ public class EnvironmentVariablesUtil {
 		clearOldVariables(store);
 		store.setValue(PreferenceConstants.P_ENV_VARS, SerializerUtil.toStringSafe(vars));
 		applyVariables(store, true);
+	}
+
+	/**
+	 * Gets native environment variable from the LaunchManager. Creates EnvironmentVariable objects.
+	 *
+	 * @return Map of name - EnvironmentVariable pairs based on native environment.
+	 */
+	public static Map<String, EnvironmentVariable> getNativeEnvironment() {
+		final Map<String, String> stringVars = DebugPlugin.getDefault().getLaunchManager().getNativeEnvironmentCasePreserved();
+		final HashMap<String, EnvironmentVariable> vars = new HashMap<>();
+		for (final Entry<String, String> entry : stringVars.entrySet()) {
+			vars.put(entry.getKey(), new EnvironmentVariable(entry.getKey(), entry.getValue()));
+		}
+		return vars;
 	}
 
 }

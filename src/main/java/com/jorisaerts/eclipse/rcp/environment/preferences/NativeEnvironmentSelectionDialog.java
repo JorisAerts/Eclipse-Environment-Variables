@@ -7,10 +7,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.eclipse.debug.internal.ui.AbstractDebugCheckboxSelectionDialog;
-import org.eclipse.debug.internal.ui.DebugPluginImages;
-import org.eclipse.debug.internal.ui.IDebugHelpContextIds;
-import org.eclipse.debug.internal.ui.launchConfigurations.EnvironmentVariable;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -22,7 +18,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
+import com.jorisaerts.eclipse.rcp.environment.eclipse.debug.internal.AbstractDebugCheckboxSelectionDialog;
 import com.jorisaerts.eclipse.rcp.environment.preferences.internal.Messages;
+import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariable;
 
 /**
  * This dialog allows users to select one or more known native environment variables from a list.
@@ -45,7 +43,7 @@ public class NativeEnvironmentSelectionDialog extends AbstractDebugCheckboxSelec
 
 	@Override
 	protected String getHelpContextId() {
-		return IDebugHelpContextIds.SELECT_NATIVE_ENVIRONMENT_DIALOG;
+		return null;
 	}
 
 	@Override
@@ -63,7 +61,8 @@ public class NativeEnvironmentSelectionDialog extends AbstractDebugCheckboxSelec
 		return new ILabelProvider() {
 			@Override
 			public Image getImage(final Object element) {
-				return DebugPluginImages.getImage(IDebugUIConstants.IMG_OBJS_ENVIRONMENT);
+				//return DebugPluginImages.getImage(IDebugUIConstants.IMG_OBJS_ENVIRONMENT);
+				return null;
 			}
 
 			@Override

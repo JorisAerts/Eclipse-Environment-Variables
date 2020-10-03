@@ -39,9 +39,11 @@ import org.eclipse.swt.widgets.TableItem;
 
 import com.jorisaerts.eclipse.rcp.environment.eclipse.debug.internal.MultipleInputDialog;
 import com.jorisaerts.eclipse.rcp.environment.eclipse.debug.internal.TextGetSetEditingSupport;
+import com.jorisaerts.eclipse.rcp.environment.preferences.NativeEnvironmentSelectionDialog;
 import com.jorisaerts.eclipse.rcp.environment.preferences.internal.Messages;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariable;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariableCollection;
+import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariablesUtil;
 
 //The table to show the local secondary index info
 public class EnvironmentVariablesTable extends Composite {
@@ -207,6 +209,35 @@ public class EnvironmentVariablesTable extends Composite {
 	}
 
 	/**
+	 * Displays a dialog that allows user to select native environment variables to add to the table.
+	 */
+	public void handleEnvSelectButtonSelected() {
+		// get Environment Variables from the OS
+		final Map<String, EnvironmentVariable> envVariables = EnvironmentVariablesUtil.getNativeEnvironment();
+
+		// get Environment Variables from the table
+		final TableItem[] items = viewer.getTable().getItems();
+		for (final TableItem item : items) {
+			final EnvironmentVariable var = (EnvironmentVariable) item.getData();
+			envVariables.remove(var.getName());
+		}
+
+		final NativeEnvironmentSelectionDialog dialog = new NativeEnvironmentSelectionDialog(getShell(), envVariables);
+		dialog.setTitle(Messages.EnvironmentTab_20);
+
+		final int button = dialog.open();
+		if (button == Window.OK) {
+			final Object[] selected = dialog.getResult();
+			for (final Object o : selected) {
+				viewer.add(o);
+			}
+		}
+
+		// updateAppendReplace();
+		// updateLaunchConfigurationDialog();
+	}
+
+	/**
 	 * Creates an editor for the value of the selected environment variable.
 	 */
 	public void handleEnvEditButtonSelected() {
@@ -256,6 +287,7 @@ public class EnvironmentVariablesTable extends Composite {
 			}
 		} finally {
 			viewer.getControl().setRedraw(true);
+			viewer.getControl().redraw();
 		}
 		// updateAppendReplace();
 		// updateLaunchConfigurationDialog();
@@ -265,6 +297,7 @@ public class EnvironmentVariablesTable extends Composite {
 	 * Copy the currently selected table entries to the clipboard.
 	 */
 	public void handleEnvCopyButtonSelected() {
+		@SuppressWarnings("unchecked")
 		final Iterable<?> iterable = () -> viewer.getStructuredSelection().iterator();
 		final String data = StreamSupport.stream(iterable.spliterator(), false).filter(o -> o instanceof EnvironmentVariable).map(EnvironmentVariable.class::cast).map(var -> String.format("%s=%s", var.getName(), var.getValue())) //$NON-NLS-1$
 				.collect(Collectors.joining(System.lineSeparator()));
