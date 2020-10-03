@@ -1,31 +1,24 @@
 package com.jorisaerts.eclipse.rcp.environment.preferences;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.util.Map.Entry;
-import java.util.Properties;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.RadioGroupFieldEditor;
+import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.jorisaerts.eclipse.rcp.environment.Activator;
+import com.jorisaerts.eclipse.rcp.environment.preferences.internal.Messages;
 import com.jorisaerts.eclipse.rcp.environment.table.EnvironmentVariablesTable;
+import com.jorisaerts.eclipse.rcp.environment.table.TableButtons;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariable;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariableCollection;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariablesUtil;
@@ -41,15 +34,14 @@ import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariablesUtil;
  * preferences can be accessed directly via the preference store.
  */
 
-public class EnvironmentPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+public class EnvironmentPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private final EnvironmentVariableCollection vars;
 	private EnvironmentVariablesTable table;
 
 	public EnvironmentPreferencePage() {
-		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Environment variables to set:");
+		setDescription(Messages.EnvironmentTab_Environment_variables_to_set__3);
 		vars = EnvironmentVariablesUtil.getEnvironmentVariables(getPreferenceStore());
 	}
 
@@ -59,67 +51,22 @@ public class EnvironmentPreferencePage extends FieldEditorPreferencePage impleme
 	 * knows how to save and restore itself.
 	 */
 	@Override
-	public void createFieldEditors() {
+	public Control createContents(final Composite parent) {
+		final Font font = parent.getFont();
 
-		table = new EnvironmentVariablesTable(getFieldEditorParent());
+		final SashForm advancedComposite = new SashForm(parent, SWT.VERTICAL);
+		advancedComposite.setFont(font);
+
+		final GridData sashData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		advancedComposite.setLayoutData(sashData);
+
+		table = new EnvironmentVariablesTable(advancedComposite);
 		table.setVariables(vars);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
-		table.refresh();
 
-		final Canvas canvas = new Canvas(getFieldEditorParent(), SWT.NONE);
-		final GridLayout gl_canvas = new GridLayout(3, true);
-		gl_canvas.verticalSpacing = 0;
-		gl_canvas.marginHeight = 0;
-		gl_canvas.marginWidth = 0;
-		canvas.setLayout(gl_canvas);
+		new TableButtons(table, vars, table);
 
-		final Button addButton = createButton(canvas, "Add");
-		addButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				vars.add(new EnvironmentVariable("Variable", "value"));
-				table.refresh();
-			}
-		});
-
-		final Button removeButton = createButton(canvas, "Remove");
-		removeButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				table.removeSelected();
-			}
-		});
-
-		final Button importButton = createButton(canvas, "Import...");
-		importButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent evt) {
-				final FileDialog dialog = new FileDialog(getShell());
-				final File file = new File(dialog.open());
-				System.out.println("Selected: " + file.getAbsolutePath());
-				final Properties props = new Properties();
-				try (Reader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);) {
-					props.load(reader);
-				} catch (final IOException e) {
-					e.printStackTrace();
-				}
-				for (final Entry<Object, Object> entry : props.entrySet()) {
-					vars.add(new EnvironmentVariable(entry.getKey().toString(), entry.getValue().toString()));
-				}
-				table.refresh();
-			}
-		});
-
-		// dummy field...
-		addField(new RadioGroupFieldEditor("id", "", 1, new String[][] {}, getFieldEditorParent(), false));
-	}
-
-	private Button createButton(final Composite parent, final String text) {
-		final Button button = new Button(parent, SWT.NONE);
-		button.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		button.setText(text);
-		button.setFont(getFieldEditorParent().getFont());
-		return button;
+		//		advancedComposite.setWeights(new int[] { 75, 25 });
+		return advancedComposite;
 	}
 
 	/*
@@ -138,16 +85,20 @@ public class EnvironmentPreferencePage extends FieldEditorPreferencePage impleme
 
 	@Override
 	protected void performDefaults() {
+		final TableViewer viewer = table.getTableViewer();
+		viewer.getControl().setRedraw(false);
+		viewer.setItemCount(0);
+		viewer.getControl().setRedraw(true);
+		viewer.getControl().redraw();
 		super.performDefaults();
-		vars.clear();
-		EnvironmentVariablesUtil.reset(getPreferenceStore());
-		if (null != table) {
-			table.refresh();
-		}
 	}
 
 	@Override
 	public boolean performOk() {
+		final EnvironmentVariableCollection vars = Stream.of(table.getTable().getItems())
+				.map(TableItem::getData)
+				.map(EnvironmentVariable.class::cast)
+				.collect(Collectors.toCollection(EnvironmentVariableCollection::new));
 		EnvironmentVariablesUtil.setEnvironmentVariables(getPreferenceStore(), vars);
 		return super.performOk();
 	}

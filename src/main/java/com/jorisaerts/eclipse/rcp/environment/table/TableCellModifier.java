@@ -4,6 +4,8 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.TableItem;
 
+import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariable;
+
 class TableCellModifier implements ICellModifier {
 
 	private final TableViewer tableViewer;
@@ -23,9 +25,9 @@ class TableCellModifier implements ICellModifier {
 
 	@Override
 	public Object getValue(final Object element, final String property) {
-		final TableLine entry = (TableLine) element;
+		final EnvironmentVariable entry = (EnvironmentVariable) element;
 		if (property.equals(keyProperty)) {
-			return entry.getVariable();
+			return entry.getName();
 		} else if (property.equals(valueProperty)) {
 			return entry.getValue();
 		}
@@ -35,13 +37,13 @@ class TableCellModifier implements ICellModifier {
 	@Override
 	public void modify(final Object element, final String property, final Object value) {
 		final TableItem item = (TableItem) element;
-		final TableLine line = (TableLine) item.getData();
+		final EnvironmentVariable variable = (EnvironmentVariable) item.getData();
 		if (property.equals(keyProperty)) {
-			line.setVariable((String) value);
+			variable.setName((String) value);
 		} else if (property.equals(valueProperty)) {
-			line.setValue((String) value);
+			variable.setValue((String) value);
 		}
-		tableViewer.update(new Object[] { line }, new String[] { property });
-		tableViewer.refresh(line);
+		tableViewer.update(new Object[] { variable }, new String[] { property });
+		tableViewer.refresh(variable);
 	}
 }

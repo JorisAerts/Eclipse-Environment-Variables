@@ -29,8 +29,7 @@ class TableContentProvider extends ArrayContentProvider {
 		final Object[] elements = new Object[map.size()];
 		int i = 0;
 		for (final EnvironmentVariable entry : map) {
-			final TableLine line = new TableLine(entry);
-			elements[i++] = line;
+			elements[i++] = entry;
 		}
 		return elements;
 	}
