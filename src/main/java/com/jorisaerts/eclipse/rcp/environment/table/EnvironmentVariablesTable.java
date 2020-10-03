@@ -92,21 +92,19 @@ public class EnvironmentVariablesTable extends Composite {
 		labelProvider = new TableLabelProvider();
 
 		viewer = new TableViewer(tableCompo, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
+		viewer.setColumnProperties(new String[] { P_VARIABLE, P_VALUE });
+		viewer.setLabelProvider(labelProvider);
+		try {
+			viewer.setContentProvider(new TableContentProvider(vars));
+		} catch (final Exception e) {
+			// noop
+		}
 
 		table = viewer.getTable();
 		table.setLayoutData(new GridData(GridData.FILL_BOTH));
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		table.setFont(font);
-
-		viewer.setColumnProperties(new String[] { P_VARIABLE, P_VALUE });
-		viewer.setLabelProvider(labelProvider);
-
-		try {
-			viewer.setContentProvider(new TableContentProvider(vars));
-		} catch (final Exception e) {
-			// noop
-		}
 
 		// Setup table buttons (on the right)
 		buttons = new TableButtons(this, vars);
@@ -142,7 +140,9 @@ public class EnvironmentVariablesTable extends Composite {
 		final ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(viewer) {
 			@Override
 			protected boolean isEditorActivationEvent(final ColumnViewerEditorActivationEvent event) {
-				return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL || event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION || event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
+				return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL
+						|| event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
+						|| event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
 			}
 
 		};
@@ -155,12 +155,12 @@ public class EnvironmentVariablesTable extends Composite {
 		TableViewerEditor.create(viewer, actSupport, feature);
 
 		// Setup environment variable name column
-		final TableViewerColumn tcv1 = new TableViewerColumn(viewer, SWT.NONE, 0);
-		tcv1.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> ((EnvironmentVariable) element).getName()));
+		final TableViewerColumn columnViewer1 = new TableViewerColumn(viewer, SWT.NONE, 0);
+		columnViewer1.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> ((EnvironmentVariable) element).getName()));
 
-		final TableColumn tc1 = tcv1.getColumn();
-		tc1.setText(Messages.EnvironmentTab_Variable_1);
-		tcv1.setEditingSupport(new TextGetSetEditingSupport<>(tcv1.getViewer(), EnvironmentVariable::getName, (final EnvironmentVariable envVar, final String value) -> {
+		final TableColumn column1 = columnViewer1.getColumn();
+		column1.setText(Messages.EnvironmentTab_Variable_1);
+		columnViewer1.setEditingSupport(new TextGetSetEditingSupport<>(columnViewer1.getViewer(), EnvironmentVariable::getName, (final EnvironmentVariable envVar, final String value) -> {
 			// Trim environment variable names
 			final String newName = value.trim();
 			if (newName != null && !newName.isEmpty()) {
@@ -175,12 +175,12 @@ public class EnvironmentVariablesTable extends Composite {
 		}));
 
 		// Setup environment variable value column
-		final TableViewerColumn tcv2 = new TableViewerColumn(viewer, SWT.NONE, 1);
-		tcv2.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> ((EnvironmentVariable) element).getValue()));
+		final TableViewerColumn columnViewer2 = new TableViewerColumn(viewer, SWT.NONE, 1);
+		columnViewer2.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> ((EnvironmentVariable) element).getValue()));
 
-		final TableColumn tc2 = tcv2.getColumn();
-		tc2.setText(Messages.EnvironmentTab_Value_2);
-		tcv2.setEditingSupport(new TextGetSetEditingSupport<>(tcv2.getViewer(), EnvironmentVariable::getValue, (envVar, value) -> {
+		final TableColumn column2 = columnViewer2.getColumn();
+		column2.setText(Messages.EnvironmentTab_Value_2);
+		columnViewer2.setEditingSupport(new TextGetSetEditingSupport<>(columnViewer2.getViewer(), EnvironmentVariable::getValue, (envVar, value) -> {
 			// Don't trim environment variable values
 			envVar.setValue(value);
 			// updateAppendReplace();
@@ -190,8 +190,8 @@ public class EnvironmentVariablesTable extends Composite {
 		// Create table column layout
 		final TableColumnLayout tableColumnLayout = new TableColumnLayout(true);
 		final PixelConverter pixelConverter = new PixelConverter(font);
-		tableColumnLayout.setColumnData(tc1, new ColumnWeightData(1, pixelConverter.convertWidthInCharsToPixels(20)));
-		tableColumnLayout.setColumnData(tc2, new ColumnWeightData(2, pixelConverter.convertWidthInCharsToPixels(20)));
+		tableColumnLayout.setColumnData(column1, new ColumnWeightData(1, pixelConverter.convertWidthInCharsToPixels(20)));
+		tableColumnLayout.setColumnData(column2, new ColumnWeightData(2, pixelConverter.convertWidthInCharsToPixels(20)));
 		tableCompo.setLayout(tableColumnLayout);
 
 		final CellEditor[] editors = new CellEditor[] { new TextCellEditor(table), new TextCellEditor(table) };
@@ -271,7 +271,7 @@ public class EnvironmentVariablesTable extends Composite {
 	/**
 	 * Adds a new environment variable to the table.
 	 */
-	public void handleAdd() {
+	private void handleAdd() {
 		final MultipleInputDialog dialog = new MultipleInputDialog(getShell(), Messages.EnvironmentTab_22);
 		dialog.addTextField(Messages.EnvironmentTab_8, null, false);
 		dialog.addVariablesField(Messages.EnvironmentTab_9, null, true);
@@ -293,7 +293,7 @@ public class EnvironmentVariablesTable extends Composite {
 	/**
 	 * Displays a dialog that allows user to select native environment variables to add to the table.
 	 */
-	public void handleSelect() {
+	private void handleSelect() {
 		// get Environment Variables from the OS
 		final Map<String, EnvironmentVariable> envVariables = EnvironmentVariablesUtil.getNativeEnvironment();
 
@@ -322,7 +322,7 @@ public class EnvironmentVariablesTable extends Composite {
 	/**
 	 * Creates an editor for the value of the selected environment variable.
 	 */
-	public void handleEdit() {
+	private void handleEdit() {
 		final IStructuredSelection sel = viewer.getStructuredSelection();
 		final EnvironmentVariable var = (EnvironmentVariable) sel.getFirstElement();
 		if (var == null) {
@@ -359,7 +359,7 @@ public class EnvironmentVariablesTable extends Composite {
 	/**
 	 * Removes the selected environment variable from the table.
 	 */
-	public void handleRemove() {
+	private void handleRemove() {
 		final IStructuredSelection sel = viewer.getStructuredSelection();
 		try {
 			viewer.getControl().setRedraw(false);
@@ -375,7 +375,7 @@ public class EnvironmentVariablesTable extends Composite {
 	/**
 	 * Copy the currently selected table entries to the clipboard.
 	 */
-	public void handleCopy() {
+	private void handleCopy() {
 		@SuppressWarnings("unchecked")
 		final Iterable<?> iterable = () -> viewer.getStructuredSelection().iterator();
 		final String data = StreamSupport
@@ -396,7 +396,7 @@ public class EnvironmentVariablesTable extends Composite {
 	/**
 	 * Extract the content from the clipboard and add the new content.
 	 */
-	public void handlePaste() {
+	private void handlePaste() {
 		final Clipboard clipboard = new Clipboard(getShell().getDisplay());
 		try {
 			final List<EnvironmentVariable> variables = convertEnvironmentVariablesFromData(clipboard.getContents(TextTransfer.getInstance()));
@@ -491,12 +491,18 @@ public class EnvironmentVariablesTable extends Composite {
 		return variables.size();
 	}
 
-	public Table getTable() {
-		return table;
+	public EnvironmentVariableCollection getEnvironmentVariables() {
+		return Stream.of(table.getItems())
+				.map(TableItem::getData)
+				.map(EnvironmentVariable.class::cast)
+				.collect(Collectors.toCollection(EnvironmentVariableCollection::new));
 	}
 
-	public TableViewer getTableViewer() {
-		return viewer;
+	public void clear() {
+		viewer.getControl().setRedraw(false);
+		viewer.setItemCount(0);
+		viewer.getControl().setRedraw(true);
+		viewer.getControl().redraw();
 	}
 
 	// Enforce call getElement method in contentProvider
