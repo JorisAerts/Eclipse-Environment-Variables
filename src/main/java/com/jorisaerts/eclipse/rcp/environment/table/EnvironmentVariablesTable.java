@@ -192,8 +192,7 @@ public class EnvironmentVariablesTable extends Composite {
 	public void handleEnvAddButtonSelected() {
 		final MultipleInputDialog dialog = new MultipleInputDialog(getShell(), Messages.EnvironmentTab_22);
 		dialog.addTextField(Messages.EnvironmentTab_8, null, false);
-		dialog.addTextField(Messages.EnvironmentTab_9, null, false);
-		//dialog.addVariablesField(Messages.EnvironmentTab_9, null, true);
+		dialog.addVariablesField(Messages.EnvironmentTab_9, null, true);
 
 		if (dialog.open() != Window.OK) {
 			return;
@@ -252,11 +251,9 @@ public class EnvironmentVariablesTable extends Composite {
 		final MultipleInputDialog dialog = new MultipleInputDialog(getShell(), Messages.EnvironmentTab_11);
 		dialog.addTextField(Messages.EnvironmentTab_8, originalName, false);
 		if (value != null && value.contains(System.lineSeparator())) {
-			//dialog.addMultilinedVariablesField(Messages.EnvironmentTab_9, value, true);
-			dialog.addTextField(Messages.EnvironmentTab_9, value, true);
+			dialog.addMultilinedVariablesField(Messages.EnvironmentTab_9, value, true);
 		} else {
-			//dialog.addVariablesField(Messages.EnvironmentTab_9, value, true);
-			dialog.addTextField(Messages.EnvironmentTab_9, value, true);
+			dialog.addVariablesField(Messages.EnvironmentTab_9, value, true);
 		}
 
 		if (dialog.open() != Window.OK) {

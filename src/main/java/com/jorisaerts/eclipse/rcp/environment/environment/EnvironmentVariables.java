@@ -1,5 +1,8 @@
 package com.jorisaerts.eclipse.rcp.environment.environment;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.variables.VariablesPlugin;
+
 import com.jorisaerts.eclipse.rcp.environment.environment.internal.Environment;
 
 public interface EnvironmentVariables {
@@ -9,7 +12,13 @@ public interface EnvironmentVariables {
 	}
 
 	static void set(final String name, final String value, final boolean overwrite) {
-		Environment.set(name, value, overwrite);
+		String substituted = value;
+		try {
+			substituted = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(value);
+		} catch (final CoreException e) {
+			// TODO: log this
+		}
+		Environment.set(name, substituted, overwrite);
 	}
 
 	static void set(final String name, final String value) {

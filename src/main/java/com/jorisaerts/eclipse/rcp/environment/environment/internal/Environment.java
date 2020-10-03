@@ -49,11 +49,6 @@ public class Environment {
 	static Map<String, String> getEnvironmentVariables() {
 		try {
 			final Map<String, String> theUnmodifiableEnvironment = System.getenv();
-			//@SuppressWarnings("unchecked")
-			//			final Class<?> cu = theUnmodifiableEnvironment.getClass();
-			//			final Field m = cu.getDeclaredField("m");
-			//			m.setAccessible(true);
-			//			return (Map<String, String>) m.get(theUnmodifiableEnvironment);
 			final Map<String, String> vars = new ConcurrentHashMap<>();
 			vars.putAll(theUnmodifiableEnvironment);
 			return vars;

@@ -15,7 +15,6 @@ public class EnvironmentVariablesUtil {
 	public static void applyVariables(final IPreferenceStore store, final boolean replace) {
 		final EnvironmentVariableCollection vars = getEnvironmentVariables(store);
 		for (final EnvironmentVariable entry : vars) {
-
 			EnvironmentVariables.set(entry.getName(), entry.getValue(), replace);
 		}
 	}
