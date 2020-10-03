@@ -201,7 +201,7 @@ public class EnvironmentVariablesTable extends Composite {
 		final String name = dialog.getStringValue(Messages.EnvironmentTab_8);
 		final String value = dialog.getStringValue(Messages.EnvironmentTab_9);
 
-		if (name != null && value != null && name.length() > 0 && value.length() > 0) {
+		if (name != null && value != null && name.length() > 0) {
 			// Trim the environment variable name but *NOT* the value
 			addVariable(new EnvironmentVariable(name.trim(), value));
 			//updateAppendReplace();
