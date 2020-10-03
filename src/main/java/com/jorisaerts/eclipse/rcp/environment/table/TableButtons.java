@@ -4,11 +4,13 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
 
 import com.jorisaerts.eclipse.rcp.environment.preferences.internal.Messages;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariableCollection;
@@ -26,8 +28,8 @@ public class TableButtons extends Composite {
 	public TableButtons(final Composite parent, final EnvironmentVariableCollection vars, final EnvironmentVariablesTable table) {
 		super(parent, SWT.NONE);
 
-		setBackground(parent.getParent().getBackground());
-		setBackgroundImage(parent.getParent().getBackgroundImage());
+		final Color background = PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_TRANSPARENT);
+		setBackground(background);
 
 		final Font font = parent.getFont();
 		setFont(font);
