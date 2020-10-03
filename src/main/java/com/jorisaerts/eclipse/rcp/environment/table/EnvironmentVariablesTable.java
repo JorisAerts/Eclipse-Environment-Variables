@@ -192,7 +192,8 @@ public class EnvironmentVariablesTable extends Composite {
 	public void handleEnvAddButtonSelected() {
 		final MultipleInputDialog dialog = new MultipleInputDialog(getShell(), Messages.EnvironmentTab_22);
 		dialog.addTextField(Messages.EnvironmentTab_8, null, false);
-		dialog.addVariablesField(Messages.EnvironmentTab_9, null, true);
+		dialog.addTextField(Messages.EnvironmentTab_9, null, false);
+		//dialog.addVariablesField(Messages.EnvironmentTab_9, null, true);
 
 		if (dialog.open() != Window.OK) {
 			return;
@@ -251,9 +252,11 @@ public class EnvironmentVariablesTable extends Composite {
 		final MultipleInputDialog dialog = new MultipleInputDialog(getShell(), Messages.EnvironmentTab_11);
 		dialog.addTextField(Messages.EnvironmentTab_8, originalName, false);
 		if (value != null && value.contains(System.lineSeparator())) {
-			dialog.addMultilinedVariablesField(Messages.EnvironmentTab_9, value, true);
+			//dialog.addMultilinedVariablesField(Messages.EnvironmentTab_9, value, true);
+			dialog.addTextField(Messages.EnvironmentTab_9, value, true);
 		} else {
-			dialog.addVariablesField(Messages.EnvironmentTab_9, value, true);
+			//dialog.addVariablesField(Messages.EnvironmentTab_9, value, true);
+			dialog.addTextField(Messages.EnvironmentTab_9, value, true);
 		}
 
 		if (dialog.open() != Window.OK) {
@@ -299,7 +302,11 @@ public class EnvironmentVariablesTable extends Composite {
 	public void handleEnvCopyButtonSelected() {
 		@SuppressWarnings("unchecked")
 		final Iterable<?> iterable = () -> viewer.getStructuredSelection().iterator();
-		final String data = StreamSupport.stream(iterable.spliterator(), false).filter(o -> o instanceof EnvironmentVariable).map(EnvironmentVariable.class::cast).map(var -> String.format("%s=%s", var.getName(), var.getValue())) //$NON-NLS-1$
+		final String data = StreamSupport
+				.stream(iterable.spliterator(), false)
+				.filter(o -> o instanceof EnvironmentVariable)
+				.map(EnvironmentVariable.class::cast)
+				.map(var -> String.format("%s=%s", var.getName(), var.getValue())) //$NON-NLS-1$
 				.collect(Collectors.joining(System.lineSeparator()));
 
 		final Clipboard clipboard = new Clipboard(getShell().getDisplay());
@@ -390,9 +397,11 @@ public class EnvironmentVariablesTable extends Composite {
 				}
 			}
 		}
-
 		if (!conflicting.isEmpty()) {
-			final String names = conflicting.stream().map(EnvironmentVariable::getName).collect(Collectors.joining(", ")); //$NON-NLS-1$
+			final String names = conflicting
+					.stream()
+					.map(EnvironmentVariable::getName)
+					.collect(Collectors.joining(", ")); //$NON-NLS-1$
 			final boolean overWrite = MessageDialog.openQuestion(getShell(), Messages.EnvironmentTab_Paste_Overwrite_Title, MessageFormat.format(Messages.EnvironmentTab_Paste_Overwrite_Message, new Object[] { names })); //
 			if (!overWrite) {
 				return 0;

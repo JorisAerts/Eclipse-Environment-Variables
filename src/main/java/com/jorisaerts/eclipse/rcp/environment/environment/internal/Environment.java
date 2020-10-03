@@ -3,6 +3,7 @@ package com.jorisaerts.eclipse.rcp.environment.environment.internal;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
@@ -45,14 +46,17 @@ public class Environment {
 		return new HashMap<String, String>();
 	}
 
-	@SuppressWarnings("unchecked")
 	static Map<String, String> getEnvironmentVariables() {
 		try {
 			final Map<String, String> theUnmodifiableEnvironment = System.getenv();
-			final Class<?> cu = theUnmodifiableEnvironment.getClass();
-			final Field m = cu.getDeclaredField("m");
-			m.setAccessible(true);
-			return (Map<String, String>) m.get(theUnmodifiableEnvironment);
+			//@SuppressWarnings("unchecked")
+			//			final Class<?> cu = theUnmodifiableEnvironment.getClass();
+			//			final Field m = cu.getDeclaredField("m");
+			//			m.setAccessible(true);
+			//			return (Map<String, String>) m.get(theUnmodifiableEnvironment);
+			final Map<String, String> vars = new ConcurrentHashMap<>();
+			vars.putAll(theUnmodifiableEnvironment);
+			return vars;
 		} catch (final Exception ex2) {
 		}
 		return new HashMap<String, String>();
