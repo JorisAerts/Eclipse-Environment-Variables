@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -20,6 +21,7 @@ import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TableViewerEditor;
@@ -29,13 +31,20 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Widget;
 
 import com.jorisaerts.eclipse.rcp.environment.eclipse.debug.internal.MultipleInputDialog;
 import com.jorisaerts.eclipse.rcp.environment.eclipse.debug.internal.TextGetSetEditingSupport;
@@ -44,6 +53,7 @@ import com.jorisaerts.eclipse.rcp.environment.preferences.internal.Messages;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariable;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariableCollection;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariablesUtil;
+import com.jorisaerts.eclipse.rcp.environment.util.SWTUtils;
 
 //The table to show the local secondary index info
 public class EnvironmentVariablesTable extends Composite {
@@ -52,6 +62,9 @@ public class EnvironmentVariablesTable extends Composite {
 	private final Table table;
 	private final TableViewer viewer;
 	private final TableLabelProvider labelProvider;
+
+	private final TableButtons buttons;
+	private final Menu menu;
 
 	protected static final String P_VARIABLE = "variable";
 	protected static final String P_VALUE = "value";
@@ -95,6 +108,36 @@ public class EnvironmentVariablesTable extends Composite {
 			// noop
 		}
 
+		// Setup table buttons (on the right)
+		buttons = new TableButtons(this, vars);
+
+		// Setup right-click context menu
+		menu = new Menu(table);
+		table.setMenu(menu);
+
+		addMenuAndButton(Messages.EnvironmentTab_Add_4, true, true, this::handleAdd);
+		addMenuAndButton(Messages.EnvironmentTab_18, true, false, this::handleSelect);
+		final List<Widget> singleWidgets = addMenuAndButton(Messages.EnvironmentTab_Edit_5, false, false, this::handleEdit);
+		final List<Widget> removeWidgets = addMenuAndButton(Messages.EnvironmentTab_Remove_6, false, true, this::handleRemove);
+		final List<Widget> copyWidgets = addMenuAndButton(Messages.EnvironmentTab_Copy, false, true, this::handleCopy);
+		addMenuAndButton(Messages.EnvironmentTab_Paste, true, true, this::handlePaste);
+
+		viewer.addSelectionChangedListener((final SelectionChangedEvent event) -> {
+			final int size = event.getStructuredSelection().size();
+			singleWidgets.forEach(e -> setEnabled(e, size == 1));
+			removeWidgets.forEach(e -> setEnabled(e, size > 0));
+			copyWidgets.forEach(e -> setEnabled(e, size > 0));
+		});
+
+		// Disable certain context menu item's if no table item is selected
+		table.addListener(SWT.MenuDetect, event -> {
+			final boolean enabled = table.getSelectionCount() > 0;
+			Stream.of(removeWidgets, copyWidgets)
+					.flatMap(List::stream)
+					.filter(MenuItem.class::isInstance)
+					.forEach(m -> setEnabled(m, enabled));
+		});
+
 		// Setup and create Columns
 		final ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(viewer) {
 			@Override
@@ -125,7 +168,7 @@ public class EnvironmentVariablesTable extends Composite {
 					if (canRenameVariable(newName)) {
 						envVar.setName(newName);
 						// updateAppendReplace();
-						// updateLaunchConfigurationDialog();
+						redrawTable();
 					}
 				}
 			}
@@ -141,7 +184,7 @@ public class EnvironmentVariablesTable extends Composite {
 			// Don't trim environment variable values
 			envVar.setValue(value);
 			// updateAppendReplace();
-			// updateLaunchConfigurationDialog();
+			redrawTable();
 		}));
 
 		// Create table column layout
@@ -156,6 +199,46 @@ public class EnvironmentVariablesTable extends Composite {
 		// Assign the cell editors to the viewer
 		viewer.setCellEditors(editors);
 		viewer.setCellModifier(new TableCellModifier(viewer));
+	}
+
+	private static void setEnabled(final Widget widget, final boolean enabled) {
+		if (widget instanceof MenuItem) {
+			((MenuItem) widget).setEnabled(enabled);
+		} else if (widget instanceof Control) {
+			((Control) widget).setEnabled(enabled);
+		}
+
+	}
+
+	public void redrawTable() {
+		viewer.getControl().setRedraw(true);
+		viewer.getControl().redraw();
+	}
+
+	private List<Widget> addMenuAndButton(final String name, final boolean enabled, final boolean addToMenu, final Runnable runnable) {
+		final SelectionAdapter adapter = new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent event) {
+				runnable.run();
+			}
+		};
+
+		final ArrayList<Widget> result = new ArrayList<>();
+
+		if (addToMenu) {
+			final MenuItem item = new MenuItem(menu, SWT.NONE);
+			item.setText(name);
+			item.addSelectionListener(adapter);
+			item.setEnabled(enabled);
+			result.add(item);
+		}
+
+		final Button button = SWTUtils.createPushButton(buttons, name, null);
+		button.addSelectionListener(adapter);
+		button.setEnabled(enabled);
+		result.add(button);
+
+		return result;
 	}
 
 	public void setVariables(final EnvironmentVariableCollection vars) {
@@ -174,7 +257,6 @@ public class EnvironmentVariablesTable extends Composite {
 		for (final TableItem item : viewer.getTable().getItems()) {
 			final EnvironmentVariable existingVariable = (EnvironmentVariable) item.getData();
 			if (existingVariable.getName().equals(newVariableName)) {
-
 				final boolean overWrite = MessageDialog.openQuestion(getShell(), Messages.EnvironmentTab_12, MessageFormat.format(Messages.EnvironmentTab_13, new Object[] { newVariableName }));
 				if (!overWrite) {
 					return false;
@@ -189,7 +271,7 @@ public class EnvironmentVariablesTable extends Composite {
 	/**
 	 * Adds a new environment variable to the table.
 	 */
-	public void handleEnvAddButtonSelected() {
+	public void handleAdd() {
 		final MultipleInputDialog dialog = new MultipleInputDialog(getShell(), Messages.EnvironmentTab_22);
 		dialog.addTextField(Messages.EnvironmentTab_8, null, false);
 		dialog.addVariablesField(Messages.EnvironmentTab_9, null, true);
@@ -211,7 +293,7 @@ public class EnvironmentVariablesTable extends Composite {
 	/**
 	 * Displays a dialog that allows user to select native environment variables to add to the table.
 	 */
-	public void handleEnvSelectButtonSelected() {
+	public void handleSelect() {
 		// get Environment Variables from the OS
 		final Map<String, EnvironmentVariable> envVariables = EnvironmentVariablesUtil.getNativeEnvironment();
 
@@ -234,13 +316,13 @@ public class EnvironmentVariablesTable extends Composite {
 		}
 
 		// updateAppendReplace();
-		// updateLaunchConfigurationDialog();
+		redrawTable();
 	}
 
 	/**
 	 * Creates an editor for the value of the selected environment variable.
 	 */
-	public void handleEnvEditButtonSelected() {
+	public void handleEdit() {
 		final IStructuredSelection sel = viewer.getStructuredSelection();
 		final EnvironmentVariable var = (EnvironmentVariable) sel.getFirstElement();
 		if (var == null) {
@@ -270,33 +352,30 @@ public class EnvironmentVariablesTable extends Composite {
 		} else {
 			var.setValue(value);
 			viewer.update(var, null);
-			// updateLaunchConfigurationDialog();
+			redrawTable();
 		}
 	}
 
 	/**
 	 * Removes the selected environment variable from the table.
 	 */
-	public void handleEnvRemoveButtonSelected() {
+	public void handleRemove() {
 		final IStructuredSelection sel = viewer.getStructuredSelection();
 		try {
 			viewer.getControl().setRedraw(false);
-			for (final Iterator<?> i = sel.iterator(); i.hasNext();) {
-				final EnvironmentVariable var = (EnvironmentVariable) i.next();
-				viewer.remove(var);
-			}
+			@SuppressWarnings("unchecked")
+			final Iterator<EnvironmentVariable> it = sel.iterator();
+			it.forEachRemaining(viewer::remove);
 		} finally {
-			viewer.getControl().setRedraw(true);
-			viewer.getControl().redraw();
+			redrawTable();
 		}
 		// updateAppendReplace();
-		// updateLaunchConfigurationDialog();
 	}
 
 	/**
 	 * Copy the currently selected table entries to the clipboard.
 	 */
-	public void handleEnvCopyButtonSelected() {
+	public void handleCopy() {
 		@SuppressWarnings("unchecked")
 		final Iterable<?> iterable = () -> viewer.getStructuredSelection().iterator();
 		final String data = StreamSupport
@@ -317,7 +396,7 @@ public class EnvironmentVariablesTable extends Composite {
 	/**
 	 * Extract the content from the clipboard and add the new content.
 	 */
-	public void handleEnvPasteButtonSelected() {
+	public void handlePaste() {
 		final Clipboard clipboard = new Clipboard(getShell().getDisplay());
 		try {
 			final List<EnvironmentVariable> variables = convertEnvironmentVariablesFromData(clipboard.getContents(TextTransfer.getInstance()));
@@ -407,7 +486,7 @@ public class EnvironmentVariablesTable extends Composite {
 
 		remove.forEach(viewer::remove);
 		variables.forEach(viewer::add);
-		// updateLaunchConfigurationDialog();
+		redrawTable();
 
 		return variables.size();
 	}

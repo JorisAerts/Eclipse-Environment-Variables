@@ -18,7 +18,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import com.jorisaerts.eclipse.rcp.environment.Activator;
 import com.jorisaerts.eclipse.rcp.environment.preferences.internal.Messages;
 import com.jorisaerts.eclipse.rcp.environment.table.EnvironmentVariablesTable;
-import com.jorisaerts.eclipse.rcp.environment.table.TableButtons;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariable;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariableCollection;
 import com.jorisaerts.eclipse.rcp.environment.util.EnvironmentVariablesUtil;
@@ -63,9 +62,6 @@ public class EnvironmentPreferencePage extends PreferencePage implements IWorkbe
 		table = new EnvironmentVariablesTable(advancedComposite);
 		table.setVariables(vars);
 
-		new TableButtons(table, vars, table);
-
-		//		advancedComposite.setWeights(new int[] { 75, 25 });
 		return advancedComposite;
 	}
 
