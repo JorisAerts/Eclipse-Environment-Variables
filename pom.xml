@@ -47,5 +47,10 @@
 	</properties>
 	<packaging>pom</packaging>
 	<dependencies>
+		<dependency>
+			<groupId>net.java.dev.jna</groupId>
+			<artifactId>jna</artifactId>
+			<version>5.6.0</version>
+		</dependency>
 	</dependencies>
 </project>
