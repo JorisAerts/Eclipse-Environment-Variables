@@ -78,20 +78,20 @@ public class MultipleInputDialog extends Dialog {
 		panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		for (final FieldSummary field : fieldList) {
 			switch (field.type) {
-			case TEXT:
-				createTextField(field.name, field.initialValue, field.allowsEmpty);
-				break;
-			case BROWSE:
-				createBrowseField(field.name, field.initialValue, field.allowsEmpty);
-				break;
-			case VARIABLE:
-				createVariablesField(field.name, field.initialValue, field.allowsEmpty);
-				break;
-			case MULTILINE_VARIABLE:
-				createMultilineVariablesField(field.name, field.initialValue, field.allowsEmpty);
-				break;
-			default:
-				break;
+				case TEXT:
+					createTextField(field.name, field.initialValue, field.allowsEmpty);
+					break;
+				case BROWSE:
+					createBrowseField(field.name, field.initialValue, field.allowsEmpty);
+					break;
+				case VARIABLE:
+					createVariablesField(field.name, field.initialValue, field.allowsEmpty);
+					break;
+				case MULTILINE_VARIABLE:
+					createMultilineVariablesField(field.name, field.initialValue, field.allowsEmpty);
+					break;
+				default:
+					break;
 			}
 		}
 
