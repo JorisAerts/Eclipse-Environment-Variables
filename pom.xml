@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.jorisaerts.eclipse.rcp.environment</groupId>
 	<artifactId>eclipse-environment-variables</artifactId>
-	<version>0.1.2</version>
+	<version>0.1.3</version>
 	<name>Eclipse Environment Variables Preference Page</name>
 	<description>A preferences page to configure global environment variables in eclipse</description>
 	<build>
