@@ -57,17 +57,16 @@ public class Environment {
 		return new HashMap<String, String>();
 	}
 
-	@SuppressWarnings("deprecation")
 	private static class POSIX {
 		static Object libc;
 		static {
 			final String os = System.getProperty("os.name").toLowerCase();
 			if (os.indexOf("win") >= 0) {
-				libc = Native.loadLibrary("msvcrt", WinLibC.class);
+				libc = Native.load("msvcrt", WinLibC.class);
 			} else if (os.indexOf("mac") >= 0) {
-				libc = Native.loadLibrary("c", LinuxLibC.class);
+				libc = Native.load("c", LinuxLibC.class);
 			} else if (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0) {
-				libc = Native.loadLibrary("c", LinuxLibC.class);
+				libc = Native.load("c", LinuxLibC.class);
 			} else {
 				throw new RuntimeException("Unsupported OS.");
 			}
