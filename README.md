@@ -21,5 +21,3 @@ Or download the jar from the [latest release](https://github.com/JorisAerts/Ecli
 The plugin can be configured on the _Environment Variables_ page in the _General_ section of eclipse's Preferences, as seen below.
 
 ![alt text](https://raw.githubusercontent.com/JorisAerts/Eclipse-Environment-Variables/gh-pages/images/PreferencePage-v0.1.0.png "Preference Page")
-
-You can **Add** & **Remove** environment variables, or **Import** a Properties file.
