@@ -4,7 +4,7 @@
 
 Allows you to define global environment variables to eclipse. You can use these variables, for example, instead of the Variables tab on JUnit Configurations.
 
-_Tested on Eclipse 4.4 to 4.17_
+_Tested on Eclipse 4.4 to 4.19_
 
 
 ### Installation
