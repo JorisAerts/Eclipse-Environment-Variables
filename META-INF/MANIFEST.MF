@@ -3,8 +3,9 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Eclipse Environment Variables
 Bundle-SymbolicName: Eclipse-Environment-Variables;singleton:=true
 Bundle-Version: 0.1.3.qualifier
+Import-Package: com.sun.jna;version="5.8.0"
 Bundle-Vendor: Joris Aerts
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: Eclipse-Environment-Variables
 Bundle-Activator: com.jorisaerts.eclipse.rcp.environment.Activator
 Require-Bundle: org.eclipse.ui,
